@@ -28,6 +28,6 @@ In LDA, betwee-class scatter matrix (𝑆𝑏) and within class scatter matrix (
 
 The fisherface method consists of two phases.
 
-First, we project the image set to a lower dimensional space, which is basically a PCA step. This ensures that that the resulting 𝑆𝑤is nonsingular.
+First, we project the image set to a lower dimensional space, which is basically a PCA step. This ensures that that the resulting 𝑆𝑤 is nonsingular.
 
 Then, we apply FLD to derive the optimal feature space. Using this feature space and k-neighbors classifier, we classified our test face images.
