@@ -1,33 +1,41 @@
 # Raster_Scanned_Face_Recognition
-In this project, I implemented an face classification model with the scikit-learn library, using PCA and LDA.
+In this project, I implemented a face classification model with the scikit-learn library, using PCA and LDA.
 
-I utilized the face dataset in matrix format.
+## Data
+I utilized the face dataset in matrix format, `face.mat`.
+- `X`
+  - 520 face images saved in matrix format
+  - size of `X` : 2576 x 520 (each column is one flattened face image)
+  - By reshaping each (2576, 1) sized column vector into a (46, 56) sized image, we can see the actual face image.
 
-There are two data in face.mat.
+- `l`
+  - labels of the face data
+  - size of `l` : 1 x 520
+  - There are 52 distinct people (classes), with 10 face images each
 
-- X
-  - 520 face data saved in matrix format
-  - size of X : 2576 * 520
-  - By reshaping each (2576, 1) sized vector into (46, 56) sized vector, we can see the actual face image.
+In the notebook, the data is loaded and split into a train/test set with an 8:2 ratio per class (8 images per person for training, 2 for testing).
 
-- l
-  - labels of face data
-  - size of l : 1 * 520
-  - There are 52 types of faces, with 10 faces each
+## How to run
 
+```bash
+python -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+jupyter notebook PCA_LDA.ipynb
+```
 
-# Principal Component Analysis (PCA)
-PCA is a dimensionality reduction technique used to transform multidimensional data into a more compact form, extracting the main features of the data.
+Run all cells in `PCA_LDA.ipynb` from top to bottom.  
+Loads `face.mat`, builds the train/test split, runs a grid search over a list of `m_pca` / `m_lda` values, and re-runs the best combination with the full fisherface / recognition visualizations.  
+Edit `m_pca_list` and `m_lda_list` to change which combinations are searched (`m_pca` must be <= `num_train_samples - num_classes`, and `m_lda` must be <= `num_classes - 1`).
 
-PCA analyzes the covariance structure of the data and transforms it into principal components.
+## Functions in the Notebook
+`show_gallery` : helper for displaying flattened face vectors as an image grid.  
+`pca()` : computes the eigenfaces from the training data.  
+`PCA_LDA()` : projects the data with PCA, then applies Fisher LDA to get the Fisherfaces.   
+`PCA_LDA_classify()` : projects train/test data onto the Fisherface space and classifies with a k-nearest neighbor classifier.  
+`PCA_LDA_grid_search()` : runs `PCA_LDA_classify()` for every `(m_pca, m_lda)` combination in the given lists, prints a table sorted by accuracy, and returns the best combination
 
-# Linear discriminant analysis (LDA) 
-LDA is another dimensionality reduction technique that finds a linear combination of features that characterizes or separates two or more classes of objects or events.
+**Result you will see:** the pipeline displays a gallery of Fisherfaces, the rows of `W_opt` reshaped into (46, 56) images — the discriminant directions that best separate the 52 identity classes.
 
-In LDA, betwee-class scatter matrix (𝑆𝑏) and within class scatter matrix (𝑆𝑤) are used to derive the feature space that best discriminates the train data based on their classes. This method is called Fisher Linear Discriminant (FLD).
-
-The fisherface method consists of two phases.
-
-First, we project the image set to a lower dimensional space, which is basically a PCA step. This ensures that that the resulting 𝑆𝑤 is nonsingular.
-
-Then, we apply FLD to derive the optimal feature space. Using this feature space and k-neighbors classifier, we classified our test face images.
+## Face recognition results
+`accuracy : 87.50% (91/104 correct)`
