@@ -1,5 +1,4 @@
-# Raster_Scanned_Face_Recognition
-In this project, I implemented a face classification model with the scikit-learn library, using PCA and LDA.
+**In this project, I implemented a face classification model with PCA and LDA.**
 
 ## Data
 I utilized the face dataset in matrix format, `face.mat`.
